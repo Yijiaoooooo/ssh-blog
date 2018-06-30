@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="cn.Yijia.domain.Board">
+        <id name="boardId">
+            <generator class="identity"/>
+        </id>
+        <property name="topicNum" column="topic_num"/>
+        <property name="boardName" column="board_name"/>
+        <property name="boardDesc" column="board_desc"/>
+    </class>
+</hibernate-mapping>
