@@ -11,7 +11,7 @@ public class UserDao extends BaseDao<User> {
     private static final String QUERY_USER_BY_USERNAME = "from User u where u.userName like ?";
 
     public User getUserByUserName(String userName) {
-        List<User> user = (List<User>)getHibernateTemplate().find(GET_USER_BY_USERNAME, userName);
+        List<User> user = (List<User>)hibernateTemplate.find(GET_USER_BY_USERNAME, userName);
         if(user.size() == 0) {
             return null;
         } else {
@@ -20,6 +20,6 @@ public class UserDao extends BaseDao<User> {
     }
 
     public List<User> queryUserByUserName(String userName) {
-        return (List<User>)getHibernateTemplate().find(QUERY_USER_BY_USERNAME, userName + "%");
+        return (List<User>)hibernateTemplate.find(QUERY_USER_BY_USERNAME, userName + "%");
     }
 }

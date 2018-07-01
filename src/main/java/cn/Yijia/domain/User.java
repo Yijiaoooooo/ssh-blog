@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity(name = "t_user")
 
-@Table(name = "t_user")
+//@Table(name = "t_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends BaseDomain {
     /**

@@ -2,10 +2,13 @@ package cn.Yijia.service;
 
 import cn.Yijia.dao.LoginLogDao;
 import cn.Yijia.dao.UserDao;
+import cn.Yijia.domain.LoginLog;
 import cn.Yijia.domain.User;
 import cn.Yijia.exception.UserExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class UserService {
@@ -47,6 +50,20 @@ public class UserService {
         u.setLocked(User.USER_UNLOCK);
 
         userDao.update(u);
+    }
+
+    private void setLoginLog(User user) {
+        LoginLog loginLog = new LoginLog();
+        loginLog.setIp(user.getLastIp());
+        loginLog.setLoginDate(new Date());
+        loginLog.setUser(user);
+
+        loginLogDao.save(loginLog);
+    }
+
+    public void loginSuccess(User user) {
+        setLoginLog(user);
+        userDao.get(user.getUserId()).setCredit(user.getCredit() + 5);
     }
 
 }

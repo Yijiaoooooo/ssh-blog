@@ -1,14 +1,16 @@
 package cn.Yijia.domain;
 
-import javax.persistence.*;
+
 import java.util.Date;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-@Entity
+import javax.persistence.*;
+
+@Entity(name = "t_login_log")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "t_login_log")
+//@Table(name = "t_login_log")
 public class LoginLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +21,7 @@ public class LoginLog {
     private Date loginDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id")
     private User user;
 
     private String ip;

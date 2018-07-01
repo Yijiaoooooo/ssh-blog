@@ -4,8 +4,7 @@ import cn.Yijia.domain.Page;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.HibernateTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.util.Assert;
 
 
@@ -21,22 +20,15 @@ import static java.util.regex.Pattern.*;
 public class BaseDao<T> {
     private Class<T> entityClass;
 
-    private HibernateTemplate hibernateTemplate;
-
     @Autowired
-    public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
-        this.hibernateTemplate = hibernateTemplate;
-    }
+    protected HibernateTemplate hibernateTemplate;
 
-    public HibernateTemplate getHibernateTemplate() {
-        return this.hibernateTemplate;
-    }
 
-    public Session getSession() {
+    private Session getSession() {
         return hibernateTemplate.getSessionFactory().getCurrentSession();
     }
 
-    public BaseDao() {
+    BaseDao() {
         Type genType = this.getClass().getGenericSuperclass();
         Type[] params = ((ParameterizedType)genType).getActualTypeArguments();
         entityClass = (Class<T>)params[0];
@@ -121,7 +113,7 @@ public class BaseDao<T> {
         Assert.isTrue(pageNo >= 1, "pageNo should start from 1");
         // Count查询
         String countQueryString = " select count (*) " + removeSelect(removeOrders(hql));
-        List countlist = getHibernateTemplate().find(countQueryString, values);
+        List countlist = hibernateTemplate.find(countQueryString, values);
         long totalCount = (Long) countlist.get(0);
 
         if (totalCount < 1) {

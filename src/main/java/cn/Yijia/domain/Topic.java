@@ -6,9 +6,9 @@ import java.util.Date;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-@Entity
+@Entity(name = "t_topic")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Table(name = "t_topic")
+//@Table(name = "t_topic")
 public class Topic extends BaseDomain {
     /**
      * 精华主题帖子
@@ -28,7 +28,7 @@ public class Topic extends BaseDomain {
     private String topicTitle;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    //@JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "board_id")

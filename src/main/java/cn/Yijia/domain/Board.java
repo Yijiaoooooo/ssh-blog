@@ -3,10 +3,13 @@ package cn.Yijia.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+
+
 import javax.persistence.*;
 
-@Entity
-@Table(name = "t_board")
+
+@Entity(name = "t_board")
+//@Table(name = "t_board")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Board extends BaseDomain {
     @Id

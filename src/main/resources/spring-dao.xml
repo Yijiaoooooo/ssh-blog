@@ -12,43 +12,59 @@
                             http://www.springframework.org/schema/aop
                             http://www.springframework.org/schema/aop/spring-aop.xsd">
     <context:component-scan base-package="cn.Yijia.dao"/>
-    <context:property-placeholder location="classpath:jbbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close"
-          p:driverClassName="${driverClassName}"
-          p:url="${Url}"
-          p:username="${sb}"
-          p:password="${password}"/>
+          p:driverClassName="com.mysql.jdbc.Driver"
+          p:url="jdbc:mysql://localhost:3306/sampledb"
+          p:username="Yijia"
+          p:password="123456"/>
 
     <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <!-- 数据源 -->
-        <property name="dataSource" ref="dataSource"/>
-        <!--扫描PO类-->
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan">
             <list>
                 <value>cn.Yijia.domain</value>
             </list>
         </property>
-        <!--设置hibernate属性-->
         <property name="hibernateProperties">
             <props>
-                <!--指定数据库类型-->
                 <prop key="hibernate.dialect">
-                    org.hibernate.dialect.MySQL5Dialect
+                    org.hibernate.dialect.MySQLDialect
                 </prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <!--启用EHCache二级缓存-->
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.region.factory_class">
-                    org.hibernate.cache.ehcache.EhCacheRegionFactory
-                </prop>
+                    org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
                 <prop key="hibernate.cache.use_query_cache">false</prop>
             </props>
         </property>
     </bean>
 
     <bean id="hibernateTemplate"
-          class="org.springframework.orm.hibernate4.HibernateTemplate"
+          class="org.springframework.orm.hibernate5.HibernateTemplate"
           p:sessionFactory-ref="sessionFactory"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="create*" propagation="REQUIRED" read-only="false"/>
+            <tx:method name="save*" propagation="REQUIRED" read-only="false" />
+            <tx:method name="reg*" propagation="REQUIRED" read-only="false" />
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" />
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* cn.Yijia.*.*Dao.*(..)))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" order="1"/>
+    </aop:config>
 </beans>
